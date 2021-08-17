@@ -89,7 +89,7 @@ exports.addTokenInfo = async (req, res, next) => {
   console.log("Inside add Token Info");
   console.log("this is the req", req.body);
   const user = await User.find({
-    wallet_address: `${req.body.creator}`,
+    wallet_address: `${req.body.owner}`,
   });
 
   if (user.length === 0) {
@@ -106,7 +106,7 @@ exports.addTokenInfo = async (req, res, next) => {
     res.send("success");
   } else {
     const user = await User.findOneAndUpdate(
-      { wallet_address: `${low_wallet_address}` },
+      { wallet_address: `${req.body.owner}` },
       {
         $push: {
           nfts: {
