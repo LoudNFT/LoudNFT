@@ -106,7 +106,7 @@ exports.addTokenInfo = async (req, res, next) => {
     res.send("success");
   } else {
     const user = await User.findOneAndUpdate(
-      { wallet_address: `${req.body.owner}` },
+      { wallet_address: `${req.body.owner.toUpperCase()}` },
       {
         $push: {
           nfts: {
