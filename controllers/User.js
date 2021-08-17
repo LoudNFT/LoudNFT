@@ -87,9 +87,9 @@ exports.getCollectibles = async (req, res, next) => {
 
 exports.addTokenInfo = async (req, res, next) => {
   console.log("Inside add Token Info");
-  console.log("this is the req", req.body);
+  console.log("this is the req", req.body.owner.toUpperCase());
   const user = await User.find({
-    wallet_address: `${req.body.owner}`,
+    wallet_address: `${req.body.owner.toUpperCase()}`,
   });
 
   if (user.length === 0) {
