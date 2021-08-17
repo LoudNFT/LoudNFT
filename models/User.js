@@ -27,8 +27,18 @@ const User = mongoose.model(
         _id: { type: String, default: shortid.generate },
         token_id: String,
         tx_hash: String,
-        created_by: String,
-        owned_by: String,
+        creator: String,
+        owner: String,
+        initial_price: String,
+        on_sale: String,
+      },
+    ],
+    activity: [
+      {
+        _id: { type: String, default: shortid.generate },
+        type: String,
+        date: String,
+        by: String,
       },
     ],
     following: [

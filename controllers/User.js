@@ -98,7 +98,7 @@ exports.addTokenInfo = async (req, res, next) => {
       blockchain: "ropsten",
       nfts: [
         {
-          token_id: req.body.token_id,
+          token_id: req.body.tokenId,
           tx_hash: req.body.txHash,
         },
       ],
@@ -110,8 +110,12 @@ exports.addTokenInfo = async (req, res, next) => {
       {
         $push: {
           nfts: {
-            token_id: req.body.token_id,
+            token_id: req.body.tokenId,
             tx_hash: req.body.txHash,
+            intial_price: req.body.intialPrice,
+            owner: req.body.owner,
+            creator: req.body.owner,
+            on_sale: req.body.onSale,
           },
         },
       },
