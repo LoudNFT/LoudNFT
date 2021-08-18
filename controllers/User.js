@@ -4,7 +4,7 @@ const Collectible = require("../models/Collectible");
 exports.checkUser = async (req, res, next) => {
   console.log(req.body.user, "here");
   const userExist = await User.find({
-    wallet_address: `${req.body.user}`,
+    wallet_address: `${req.body.user.toLowerCase()}`,
   });
   if (userExist.length !== 0) {
     res.json("user already exists!");
@@ -18,7 +18,7 @@ exports.checkUser = async (req, res, next) => {
 exports.getUserDetails = async (req, res, next) => {
   // console.log(req.body);
   const userExist = await User.find({
-    wallet_address: `${req.body.user}`,
+    wallet_address: `${req.body.user.toLowerCase()}`,
   });
 
   if (userExist.length === 0) {
@@ -32,7 +32,7 @@ exports.getUserDetails = async (req, res, next) => {
 exports.saveUser = async (req, res, next) => {
   // console.log(req.body.user);
   const userExist = await User.find({
-    wallet_address: `${req.body.user}`,
+    wallet_address: `${req.body.user.toLowerCase()}`,
   });
 
   if (userExist.length !== 0) {
@@ -41,7 +41,7 @@ exports.saveUser = async (req, res, next) => {
   }
 
   let newUser = {
-    wallet_address: req.body.user,
+    wallet_address: req.body.user.toLowerCase(),
     blockchain: req.body.blockchain,
     collectibles: [],
     nfts: [],
@@ -87,10 +87,12 @@ exports.getCollectibles = async (req, res, next) => {
 
 exports.addTokenInfo = async (req, res, next) => {
   console.log("Inside add Token Info");
-  console.log("this is the req", req.body.owner.toUpperCase());
+  let userAddr = req.body.owner;
+  console.log("this is the req", userAddr);
   const user = await User.find({
-    wallet_address: `${req.body.owner.toUpperCase()}`,
+    wallet_address: req.body.owner,
   });
+  console.log(user, "this is user");
 
   if (user.length === 0) {
     const newUser = {
