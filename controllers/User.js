@@ -88,6 +88,13 @@ exports.getCollectibles = async (req, res, next) => {
 exports.addTokenInfo = async (req, res, next) => {
   console.log("Inside add Token Info");
   let userAddr = req.body.owner;
+
+  let currentDate = new Date();
+
+  console.log(currentDate.toString(), "this is date");
+
+  // return;
+
   console.log("this is the req", userAddr);
   const user = await User.find({
     wallet_address: req.body.owner,
@@ -107,8 +114,8 @@ exports.addTokenInfo = async (req, res, next) => {
     };
     res.send("success");
   } else {
-    const user = await User.findOneAndUpdate(
-      { wallet_address: `${req.body.owner.toUpperCase()}` },
+    const updatedUser = await User.findOneAndUpdate(
+      { wallet_address: `${req.body.owner.toLowerCase()}` },
       {
         $push: {
           nfts: {
@@ -124,7 +131,21 @@ exports.addTokenInfo = async (req, res, next) => {
       { new: true, useFindAndModify: false }
     );
 
-    res.send("success");
+    const updatedUserActivity = await User.findOneAndUpdate(
+      { wallet_address: `${req.body.owner.toLowerCase()}` },
+      {
+        $push: {
+          activity: {
+            activity_type: "Minting",
+            date: currentDate.toString(),
+            by: req.body.owner.toLowerCase(),
+          },
+        },
+      },
+      { new: true, useFindAndModify: false }
+    );
+    // console.log(updateUserActivity);
+    res.send(updatedUserActivity);
   }
 };
 

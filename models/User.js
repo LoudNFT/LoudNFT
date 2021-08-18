@@ -30,13 +30,13 @@ const User = mongoose.model(
         creator: String,
         owner: String,
         initial_price: String,
-        on_sale: String,
+        on_sale: Boolean,
       },
     ],
     activity: [
       {
         _id: { type: String, default: shortid.generate },
-        type: String,
+        activity_type: String,
         date: String,
         by: String,
       },
