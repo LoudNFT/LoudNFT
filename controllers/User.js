@@ -126,6 +126,7 @@ exports.addTokenInfo = async (req, res, next) => {
             creator: req.body.owner,
             on_sale: req.body.onSale,
             music: req.body.music,
+            cover_image: req.body.coverImage,
           },
         },
       },
