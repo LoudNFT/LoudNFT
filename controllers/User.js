@@ -125,6 +125,7 @@ exports.addTokenInfo = async (req, res, next) => {
             owner: req.body.owner,
             creator: req.body.owner,
             on_sale: req.body.onSale,
+            music: req.body.music,
           },
         },
       },
@@ -145,7 +146,7 @@ exports.addTokenInfo = async (req, res, next) => {
       { new: true, useFindAndModify: false }
     );
     // console.log(updateUserActivity);
-    res.send(updatedUserActivity);
+    res.send("success");
   }
 };
 

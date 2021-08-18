@@ -31,6 +31,7 @@ const User = mongoose.model(
         owner: String,
         initial_price: String,
         on_sale: Boolean,
+        music: String,
       },
     ],
     activity: [
