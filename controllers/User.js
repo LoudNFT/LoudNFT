@@ -121,7 +121,7 @@ exports.addTokenInfo = async (req, res, next) => {
           nfts: {
             token_id: req.body.tokenId,
             tx_hash: req.body.txHash,
-            intial_price: req.body.intialPrice,
+            initial_price: req.body.initialPrice,
             owner: req.body.owner,
             creator: req.body.owner,
             on_sale: req.body.onSale,
