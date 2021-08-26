@@ -18,11 +18,9 @@ var options = {
 };
 
 pushyAPI.sendPushNotification(data, to, options, function (err, id) {
-  // Log errors to console
   if (err) {
     return console.log("Fatal Error", err);
   }
 
-  // Log success
   console.log("Push sent successfully! (ID: " + id + ")");
 });
