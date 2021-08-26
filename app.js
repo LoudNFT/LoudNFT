@@ -18,7 +18,7 @@ const pinataSecretApiKey = process.env.PINATA_SECRET_KEY;
 const Web3 = require("web3");
 const abiDecoder = require("abi-decoder");
 const web3 = new Web3(
-  "https://rinkeby.infura.io/v3/22b3a9c2b68f42abb593b0582461ed6d"
+  "https://speedy-nodes-nyc.moralis.io/58179be7c4a9b63cf4bac6a5/bsc/testnet"
 );
 
 const User = require("./models/User");
