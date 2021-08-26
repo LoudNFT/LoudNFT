@@ -17,6 +17,11 @@ const pinataApiKey = process.env.PINATA_API_KEY;
 const pinataSecretApiKey = process.env.PINATA_SECRET_KEY;
 const Web3 = require("web3");
 const abiDecoder = require("abi-decoder");
+
+/*
+CONNECTING RPC NODE BSC-TESTNET (CHANGE FOR MAINNET)
+*/
+
 const web3 = new Web3(
   "https://speedy-nodes-nyc.moralis.io/58179be7c4a9b63cf4bac6a5/bsc/testnet"
 );

@@ -4,8 +4,7 @@ const mongoose = require("mongoose");
 const mongoConnect = (callback) => {
   mongoose
     .connect(
-      process.env.MONGODB_URL ||
-        "mongodb+srv://superadmin:ipPqk5KGqa8qxSKz@nftcluster.l8ys1.mongodb.net/nftdatabse?retryWrites=true&w=majority",
+      process.env.MONGODB_URL || "",
 
       {
         useNewUrlParser: true,

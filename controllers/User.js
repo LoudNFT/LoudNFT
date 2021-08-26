@@ -16,6 +16,7 @@ exports.checkUser = async (req, res, next) => {
 };
 
 exports.updateProfileImage = async (req, res, next) => {
+  console.log("inisde here!", req.body);
   const userExist = await User.findOneAndUpdate(
     {
       wallet_address: `${req.body.user.toLowerCase()}`,
