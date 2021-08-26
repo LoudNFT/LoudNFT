@@ -23,44 +23,14 @@ const web3 = new Web3(
 
 const User = require("./models/User");
 
-// const sample = async () => {
-//   const transactionHash =
-//     "0x16865d3b742973dc3f545b90afb3fd044ba84b86b56dd6efa5185c4ae23e2344";
-//   let myResult;
-//   web3.eth.getTransaction(transactionHash, async function (error, result) {
-//     myResult = result;
-
-//     const a = web3.utils.hexToUtf8(myResult.input);
-//     // const testData =
-//     //   "0x53d9d9100000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000a6d9c5f7d4de3cef51ad3b7235d79ccc95114de5000000000000000000000000a6d9c5f7d4de3cef51ad3b7235d79ccc95114daa";
-//     // const decodedData = abiDecoder.decodeMethod(testData);
-//     // console.log(decodedData, "decoded");
-
-//     var newString = Buffer.from(a, "utf-8").toString();
-//     console.log(newString, "this is another");
-//     // console.log(result, " this is result");
-//   });
-// };
-
-// sample();
-
 const axios = require("axios");
 
 const FormData = require("form-data");
 app.use(express.json());
 app.use(cors());
 
-// fs.unlink(myPath, (err) => {
-//   if (err) {
-//     console.error(err);
-//     return;
-//   }
-
-//   //file removed
-// });
-
 /*
-TO PIN FILE TO TEST NET AND GET FILE HASH
+TO PIN FILE TO IPFS AND GET FILE HASH
 */
 
 const pinFileToIPFS = async (myFilePath) => {
@@ -75,12 +45,12 @@ const pinFileToIPFS = async (myFilePath) => {
       pinata_secret_api_key: pinataSecretApiKey,
     },
   });
-  // console.log(res.data, "this is hash of image");
+
   return res.data.IpfsHash;
 };
 
 /*
-TO PIN METADATA TO TEST NET AND GET FILE HASH
+TO PIN METADATA TO IPFS  AND GET FILE HASH
 */
 
 const pinDataToIPFS = async () => {
@@ -95,7 +65,7 @@ const pinDataToIPFS = async () => {
       pinata_secret_api_key: pinataSecretApiKey,
     },
   });
-  // console.log(res.data, "this is hash of metadata");
+
   return res.data.IpfsHash;
 };
 
@@ -115,19 +85,22 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 100000000 },
 }).single("myImage");
-// const router = express.Router();
+
 app.post("/upload", async (req, res, err) => {
   let myPath;
   upload(req, res, (err) => {
     console.log("Request file ---", req.file);
     myPath = `./public/uploads/${req.file.filename}`;
-    console.log(myPath, "this is  myPath");
+
     res.status(201).json(myPath);
   });
 });
 
+/*
+METADATA CREATION API
+*/
+
 app.post("/create_meta_data", async (req, res, next) => {
-  //   console.log(req.body.imagePath, "this is the imagePath");
   const imagePath = req.body.imagePath;
   const imageHash = await pinFileToIPFS(imagePath);
 
@@ -146,23 +119,22 @@ app.post("/create_meta_data", async (req, res, next) => {
 
   const metaDataURI = `https://ipfs.io/ipfs/${metaDataHash}`;
 
-  // await ciqlJson.open("./data.json").set("image", "this is new image").save();
-  // await ciqlJson.open("./data.json").set("image", "this is new image").save();
-  // await ciqlJson.open("./data.json").set("image", "this is new image").save();
-  //   console.log(metaDataURI, "thisisuri");
-
   fs.unlink(imagePath, (err) => {
     if (err) {
       console.log(err, "error");
       return;
     }
   });
-  // console.log("this is metaData uri", metaData);
+
   res.status(201).json({
     metaDataURI: metaDataURI,
     imageHash: imageHash,
   });
 });
+
+/*
+ CONNECT TO MONGODB
+*/
 
 mongoConnect((res) => {
   console.log("connection successfull!!!");

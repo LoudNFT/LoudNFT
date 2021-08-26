@@ -15,6 +15,8 @@ router.post("/create_new_collectible", UserController.createCollectibles);
 
 router.post("/add_token_info", UserController.addTokenInfo);
 
+router.post("/update_profile_image", UserController.updateProfileImage);
+
 router.post("/get_top_music");
 
 router.post("/get_top_art");

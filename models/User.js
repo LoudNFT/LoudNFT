@@ -10,6 +10,8 @@ const User = mongoose.model(
     wallet_address: String,
     blockchain: String,
     profile_image: String,
+    bio: String,
+
     collectibles: [
       {
         _id: { type: String, default: shortid.generate },
