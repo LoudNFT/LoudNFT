@@ -94,6 +94,22 @@ exports.getCollectibles = async (req, res, next) => {
   }
 };
 
+exports.getTokenInfo = async (req, res, next) => {
+  const nft = await Nft.find({
+    token_id: `${req.body.tokenId}`,
+  });
+
+  if (nft.length !== 0) {
+    res.status(201).json({
+      nft: nft[0],
+    });
+  } else {
+    res.status(201).json({
+      message: "nft not found!",
+    });
+  }
+};
+
 exports.addTokenInfo = async (req, res, next) => {
   let userAddr = req.body.owner;
 
