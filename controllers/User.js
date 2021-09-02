@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Collectible = require("../models/Collectible");
+const Nft = require("../models/Nft");
 
 exports.checkUser = async (req, res, next) => {
   const userExist = await User.find({
@@ -149,6 +150,31 @@ exports.addTokenInfo = async (req, res, next) => {
       },
       { new: true, useFindAndModify: false }
     );
+
+    const newNft = {
+      token_id: req.body.tokenId,
+      tx_hash: req.body.txHash,
+      created_by: req.body.owner,
+      owned_by: req.body.owner,
+      trending: false,
+      on_auction: false,
+      on_sale: req.body.onSale,
+      initial_price: req.body.initialPrice,
+      tx_history: [],
+    };
+    const nftExist = await Nft.find({
+      token_id: `${req.body.tokenId}`,
+    });
+
+    if (nftExist.length !== 0) {
+      res.json("user already exists!");
+      return;
+    }
+
+    const createdNft = new Nft(newNft);
+    const savedNft = await createdNft.save();
+
+    console.log(savedNft, "this si saved nft");
 
     res.send("success");
   }

@@ -13,6 +13,8 @@ const User = mongoose.model(
     owned_by: String,
     trending: Boolean,
     on_auction: Boolean,
+    on_sale: Boolean,
+    initial_price: String,
     tx_history: [
       {
         from: String,

@@ -13,7 +13,6 @@ const mongoConnect = (callback) => {
       }
     )
     .then((res) => {
-      // console.log("connected");
       callback(res);
     })
     .catch((err) => {
