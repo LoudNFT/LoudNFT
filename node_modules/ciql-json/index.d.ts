@@ -16,6 +16,11 @@ export type CIJSON = {
      */
     set(key: string, value: any): CIJSON
     /**
+    * Delete Key into JSON data
+    * @param key Key you want to delete
+    */
+    remove(key: string): CIJSON
+    /**
     * Push data in JSON Object
     * @param key Key of JSON Object
     * @param values The values you want to push

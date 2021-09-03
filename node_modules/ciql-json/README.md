@@ -112,6 +112,28 @@ ciqlJson
 //output file (data.json): {school : {name : "ESATIC", location: "Treichville",}}
 ```
 
+<h3 id="funcremove" style="color:#ff80ab;">
+<a href="#funcremove">#  .remove</a></h3>
+
+<p style="font-size:16.5px">
+Use the <code>remove</code> method to delete key in JSON data.
+</p>
+
+
+```js
+const ciqlJson = require("ciql-json")
+
+ciqlJson
+    .create({})
+    .set("school", "ESATIC")
+    .set("location", "Treichville")
+    .remove("school")
+    .save('data.json')
+
+//output file (data.json): { location : "Treichville"}
+```
+
+
 <h3 id="funcextract" style="color:#ff80ab;">
 <a href="#funcextract">#  .extract</a></h3>
 <p style="font-size:16.5px">
