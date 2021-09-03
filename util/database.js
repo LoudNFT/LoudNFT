@@ -4,8 +4,7 @@ const mongoose = require("mongoose");
 const mongoConnect = (callback) => {
   mongoose
     .connect(
-      process.env.MONGODB_URL ||
-        "mongodb+srv://superadmin:EDMK3lPSqIXxdAQH@louddatabase.kruit.mongodb.net/loudDatabase?retryWrites=true&w=majority",
+      process.env.MONGODB_URL || "",
 
       {
         useNewUrlParser: true,
