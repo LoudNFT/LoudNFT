@@ -346,5 +346,5 @@ app.post("/transfer_nft", async (req, res, next) => {
 
 mongoConnect((res) => {
   console.log("connection successfull!!!");
-  app.listen(process.env.PORT || 80);
+  app.listen(process.env.PORT || 5000);
 });
