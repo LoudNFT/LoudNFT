@@ -17,7 +17,7 @@ const mongoConnect = (callback) => {
       callback(res);
     })
     .catch((err) => {
-      console.log(err, "error");
+      console.log(err, "error this is incommming");
     });
 };
 
