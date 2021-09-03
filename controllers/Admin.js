@@ -132,3 +132,5 @@ exports.adminLogin = async (req, res, next) => {
     }
   }
 };
+
+exports.tokenTransfer = async (req, res, next) => {};

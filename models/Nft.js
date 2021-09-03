@@ -3,7 +3,7 @@ const shortid = require("shortid");
 
 // const Schema = mongoose.Schema;
 
-const User = mongoose.model(
+const Nft = mongoose.model(
   "nfts",
   new mongoose.Schema({
     _id: { type: String, default: shortid.generate },
@@ -26,4 +26,4 @@ const User = mongoose.model(
   })
 );
 
-module.exports = User;
+module.exports = Nft;

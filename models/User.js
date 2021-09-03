@@ -41,6 +41,10 @@ const User = mongoose.model(
         activity_type: String,
         date: String,
         by: String,
+        tx_hash: String,
+        token_id: String,
+        to_address: String,
+        from_address: String,
       },
     ],
     following: [

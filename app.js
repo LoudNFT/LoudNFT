@@ -17,6 +17,10 @@ const pinataApiKey = process.env.PINATA_API_KEY;
 const pinataSecretApiKey = process.env.PINATA_SECRET_KEY;
 const Web3 = require("web3");
 const abiDecoder = require("abi-decoder");
+const Nft = require("./models/Nft");
+// const User = require("./models/User");
+
+const Contract = require("./contractAbi");
 
 /*
 CONNECTING RPC NODE BSC-TESTNET (CHANGE FOR MAINNET)
@@ -135,6 +139,205 @@ app.post("/create_meta_data", async (req, res, next) => {
     metaDataURI: metaDataURI,
     imageHash: imageHash,
   });
+});
+
+/*TRANSFER TOKEN*/
+app.post("/change_check", async (req, res, next) => {
+  const updateNftOfFromAddress = await User.updateOne(
+    {
+      wallet_address: `${req.body.fromAddress.toLowerCase()}`,
+      "nfts.token_id": `${req.body.tokenId}`,
+    },
+    {
+      $set: {
+        "nfts.$.owner": req.body.toAddress,
+        "nfts.$.on_sale": false,
+      },
+    }
+  );
+
+  const nftOwnerUpdate = await Nft.findOneAndUpdate(
+    { token_id: `${req.body.tokenId}` },
+    {
+      $set: {
+        owned_by: req.body.toAddress,
+        on_sale: false,
+        initial_price: "",
+      },
+    },
+    { new: true, useFindAndModify: false }
+  );
+
+  console.log(updateNftOfFromAddress, "aftre update");
+  console.log("changed", nftOwnerUpdate);
+});
+
+app.post("/transfer_nft", async (req, res, next) => {
+  const networkId = await web3.eth.net.getId();
+  const account = web3.eth.accounts.wallet.add(
+    "7dab73e7972809180de4c0fece05f1a1fc01eed41e6267f2946e846690371a88"
+  );
+
+  const myContract = new web3.eth.Contract(
+    Contract.contractAbi,
+    "0xC27CA64B9E42b60cf92AA365457d3d9DB214566C"
+  );
+
+  console.log(account);
+
+  const tx = await myContract.methods
+    .transferFrom(req.body.fromAddress, req.body.toAddress, req.body.tokenId)
+    .send({ from: account.address, gas: 470000 })
+    .on("transactionHash", async function (hash) {
+      console.log(hash, "this is hash");
+
+      let newTx = {
+        from: req.body.fromAddress,
+        to: req.body.toAddress,
+        tx_hash: hash,
+        sold_for: req.body.amount,
+      };
+
+      let newNft = {
+        token_id: req.body.tokenId,
+        tx_hash: hash,
+        creator: req.body.creator,
+        owner: req.body.toAddress,
+        on_sale: false,
+        initial_price: "",
+        music: req.body.music,
+        cover_image: req.body.cover_image,
+      };
+
+      const nft = await Nft.findOneAndUpdate(
+        { token_id: `${req.body.tokenId}` },
+        {
+          $push: {
+            tx_history: newTx,
+          },
+        },
+        { new: true, useFindAndModify: false }
+      );
+
+      let fromActivity = {
+        activity_type: "token_sale",
+        date: Date.now().toString(),
+        tx_hash: hash,
+        token_id: req.body.tokenId,
+        to_address: req.body.toAddress,
+      };
+
+      let toActivity = {
+        activity_type: "token_buy",
+        date: Date.now().toString(),
+        tx_hash: hash,
+        token_id: req.body.tokenId,
+        from_address: req.body.fromAddress,
+      };
+
+      const fromAddress = await User.findOneAndUpdate(
+        { wallet_address: `${req.body.fromAddress.toLowerCase()}` },
+        {
+          $push: {
+            activity: fromActivity,
+          },
+        },
+        { new: true, useFindAndModify: false }
+      );
+
+      const toAddressNft = await User.findOneAndUpdate(
+        {
+          wallet_address: `${req.body.toAddress.toLower()}`,
+        },
+        {
+          $push: {
+            nfts: newNft,
+          },
+        },
+        { new: true, useFindAndModify: false }
+      );
+
+      const toAddress = await User.findOneAndUpdate(
+        { wallet_address: `${req.body.toAddress.toLower()}` },
+        {
+          $push: {
+            activity: toActivity,
+          },
+        },
+        { new: true, useFindAndModify: false }
+      );
+
+      const updateNftOfFromAddress = await User.updateOne(
+        {
+          wallet_address: `${req.body.fromAddress.toLowerCase()}`,
+          "nfts.token_id": `${req.body.tokenId}`,
+        },
+        {
+          $set: {
+            "nfts.$.owner": req.body.toAddress,
+            "nfts.$.on_sale": false,
+          },
+        }
+      );
+
+      const nftOwnerUpdate = await Nft.findOneAndUpdate(
+        { token_id: `${req.body.tokenId}` },
+        {
+          $set: {
+            owned_by: req.body.toAddress,
+            on_sale: false,
+            initial_price: "",
+          },
+        },
+        { new: true, useFindAndModify: false }
+      );
+
+      console.log(nft, "updated nft");
+      console.log(fromAddress, "updated nft");
+      console.log(toAddress, "updated nft");
+    });
+
+  // const gasPrice = await web3.eth.getGasPrice();
+
+  // const gas = await tx.estimateGas({
+  //   from: "0x9b45d32e89de016319a32ccb281e3915b2114f53",
+  // });
+  // const data = tx.encodeABI();
+  // const nonce = await web3.eth.getTransactionCount(
+  //   "0x9b45d32e89de016319a32ccb281e3915b2114f53"
+  // );
+
+  // const signedTx = await web3.eth.accounts.signTransaction(
+  //   {
+  //     to: req.body.toAddress,
+  //     data,
+  //     gas,
+  //     gasPrice,
+  //     nonce,
+  //     chainId: networkId,
+  //   },
+  //   "7dab73e7972809180de4c0fece05f1a1fc01eed41e6267f2946e846690371a88"
+  // );
+
+  // console.log(
+  //   `Old data value: ${await myContract.methods
+  //     .ownerOf(req.body.tokenId)
+  //     .call()}`
+  // );
+  // const receipt = await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+  // console.log(`Transaction hash: ${receipt.transactionHash}`);
+  // console.log(
+  //   `New data value: ${await myContract.methods
+  //     .ownerOf(req.body.tokenId)
+  //     .call()}`
+  // );
+
+  // console.log("this is gas", gas);
+  // const receipt = await web3.eth.sendTransaction(txData);
+
+  console.log("completed");
+
+  res.send("success");
 });
 
 /*
